@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #0056b3;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.8;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        .story-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .story-header {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .story-header:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        .story-content {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            text-align: justify;
+            padding: 0 1rem;
+        }
+
+        .story-section {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+            border-left: 3px solid var(--primary-color);
+            margin-left: 1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #6e8efb11, #4a6cf711);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .story-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            margin: 2rem auto;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .story-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .story-content {
+                font-size: 1rem;
+                padding: 0;
+            }
+        }
+
+        /* Animation for story sections */
+        .story-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Delay each paragraph's animation */
+        .story-section:nth-child(1) { animation-delay: 0.2s; }
+        .story-section:nth-child(2) { animation-delay: 0.4s; }
+        .story-section:nth-child(3) { animation-delay: 0.6s; }
+        .story-section:nth-child(4) { animation-delay: 0.8s; }
+        .story-section:nth-child(5) { animation-delay: 1s; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-brand">Tic Tac Toe</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="leaderboard.html">Leaderboard</a>
+                <a href="#">How to Play</a>
+                <a href="about.html" class="active">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="story-container">
+        <div class="story-header">
+            <h1>Playing Tic-Tac-Toe is very easy and fun. It is played by two players. Here are the simple rules:</h1>
+        </div>
+
+        <div class="story-content">
+            <div class="story-section">
+                <p>Game Board – It is played on a 3x3 grid (board).</p>
+            </div>
+
+            <div class="story-section">
+                <p>Players – One player uses 'X' and the other uses 'O'.</p>
+            </div>
+
+            <div class="highlight-box">
+                <p>Making Moves – Players take turns placing their mark ('X' or 'O') in any empty box (square).</p>
+            </div>
+
+            <div class="story-section">
+                <p>"How to Win?
+                    If a player gets three 'X' or 'O' in a row, column, or diagonally, they win.
+                    If all 9 boxes on the board are filled and no one gets three in a row, the game is a draw.</p>
+            </div>
+
+            <div class="story-section">
+                <p>Play Again – Once the game ends, clear the grid and start again.</p>
+            </div>
+
+
+
+            <div class="highlight-box">
+                <p>Tic-Tac-Toe is a fast, easy, and brain-challenging game! 😊</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

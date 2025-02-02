@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>टिक-टैक-टो - हमारी कहानी</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #0056b3;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.8;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            z-index: 2;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-color);
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 2;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background-color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .story-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .story-header {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .story-header:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        .story-content {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            text-align: justify;
+            padding: 0 1rem;
+        }
+
+        .story-section {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+            border-left: 3px solid var(--primary-color);
+            margin-left: 1rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #6e8efb11, #4a6cf711);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .story-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            margin: 2rem auto;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .story-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .story-content {
+                font-size: 1rem;
+                padding: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 5rem 2rem 2rem;
+                gap: 1rem;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            .menu-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(8px, 6px);
+            }
+
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -5px);
+            }
+        }
+
+        /* Animation for story sections */
+        .story-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Delay each paragraph's animation */
+        .story-section:nth-child(1) { animation-delay: 0.2s; }
+        .story-section:nth-child(2) { animation-delay: 0.4s; }
+        .story-section:nth-child(3) { animation-delay: 0.6s; }
+        .story-section:nth-child(4) { animation-delay: 0.8s; }
+        .story-section:nth-child(5) { animation-delay: 1s; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-brand">Tic Tac Toe</a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="leaderboard.html">Leaderboard</a>
+                <a href="howtoplay.html">How to Play</a>
+                <a href="about.html" class="active">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="story-container">
+        <div class="story-header">
+            <h1>टिक-टैक-टो क्रांति: आरव और आहान की कहानी</h1>
+        </div>
+
+        <div class="story-content">
+            <div class="story-section">
+                <p>एक छोटे से शहर में, जो हरी-भरी पहाड़ियों और व्यस्त गलियों के बीच बसा था, दो छोटे लड़के, आरव और आहान, अपने इनडोर खेलों के प्रति प्रेम के लिए जाने जाते थे। जहाँ अन्य बच्चे शाम को क्रिकेट या फुटबॉल खेलते थे, वहीं ये दोनों बोर्ड गेम, पहेलियाँ और दिमागी खेलों में आनंद लेते थे। उनका सबसे पसंदीदा खेल? टिक-टैक-टो।</p>
+            </div>
+
+            <div class="story-section">
+                <p>आरव, जो बड़ा था, एक रणनीतिक सोच रखने वाला बच्चा था। वह चालें पहले से भांप सकता था और हमेशा जीतने की सही योजना बनाता था। दूसरी ओर, आहान एक रचनात्मक प्रतिभा था। उसे नए नियम और विविधताएँ आज़माने में मज़ा आता था, जिससे हर बार खेल और भी रोमांचक बन जाता था।</p>
+            </div>
+
+            <div class="highlight-box">
+                <p>एक बरसात की दोपहर, जब सड़कें पानी से भर गईं और बच्चे घरों में भाग गए, आरव और आहान खिड़की के पास बैठे एक पुराने गत्ते पर टिक-टैक-टो खेल रहे थे। वे इसे इतनी बार खेल चुके थे कि उन्होंने हर रणनीति में महारत हासिल कर ली थी। लेकिन उस दिन, आहान के दिमाग में एक नया विचार आया।</p>
+            </div>
+
+            <div class="story-section">
+                <p>"अगर हम टिक-टैक-टो को बड़ा बना दें तो?" आहान ने कहा, उसकी आँखों में उत्साह चमक रहा था।</p>
+                <p>"बड़ा? कैसे?" आरव ने उत्सुकता से पूछा।</p>
+                <p>"3x3 ग्रिड के बजाय, हम इसे 5x5 या 10x10 क्यों न बनाएं? और शायद इसमें जीतने के नए तरीके जोड़ सकते हैं!" आहान ने एक कागज पर रेखाचित्र बनाते हुए समझाया।</p>
+            </div>
+
+            <div class="story-section">
+                <p>लड़कों ने घंटों नए संस्करण बनाने में बिता दिए—मेगा टिक-टैक-टो, स्पीड टिक-टैक-टो, और यहाँ तक कि एक टीम आधारित टिक-टैक-टो, जहाँ खिलाड़ी मिलकर खेलते थे। उनके परिवार, पड़ोसी, और धीरे-धीरे उनके स्कूल के दोस्त इस खेल के दीवाने हो गए। जल्द ही, यह खेल पूरे शहर में फैल गया, बच्चे अपने बैग में टिक-टैक-टो की शीट्स लेकर घूमने लगे और लंच ब्रेक और स्कूल के बाद एक-दूसरे को चुनौती देने लगे।</p>
+            </div>
+
+            <div class="highlight-box">
+                <p>इस नए टिक-टैक-टो क्रेज़ की खबर उनके स्कूल के प्रधानाचार्य तक पहुँची, जिन्होंने पहला "टिक-टैक-टो चैम्पियनशिप" आयोजित करने का फैसला किया। यह आयोजन बेहद सफल रहा और इसमें आस-पास के शहरों के बच्चे भी शामिल हुए। इस चैम्पियनशिप में विभिन्न संस्करणों की श्रेणियाँ थीं, यहाँ तक कि शिक्षकों ने भी भाग लिया।</p>
+            </div>
+
+            <div class="story-section">
+                <p>लेकिन असली जादू तब हुआ जब एक स्थानीय पत्रकार ने इस कहानी को अखबार में प्रकाशित किया। लड़कों के अनोखे टिक-टैक-टो संस्करण प्रसिद्ध हो गए और जल्द ही, गेम डेवलपर्स ने इसमें दिलचस्पी लेनी शुरू कर दी। कुछ ही महीनों में, उनके बनाए गए संस्करण एक मोबाइल ऐप में बदल गए, और दुनिया भर में लाखों लोग उनके बनाए गए नियमों के साथ टिक-टैक-टो खेलने लगे।</p>
+            </div>
+
+            <div class="story-section">
+                <p>आरव और आहान, दो छोटे लड़के जो इनडोर खेलों से प्यार करते थे, अनजाने में टिक-टैक-टो की एक वैश्विक क्रांति का कारण बन गए। उनका बचपन का जुनून कुछ बहुत बड़ा बन गया—एक ऐसा खेल जिसने लोगों को जोड़ा, उन्हें सोचने पर मजबूर किया और सबसे महत्वपूर्ण, दोस्ताना प्रतिस्पर्धा की खुशी को फैलाया।</p>
+            </div>
+
+            <div class="highlight-box">
+                <p>और इस तरह, आरव और आहान की कहानी, टिक-टैक-टो चैम्पियंस की तरह, बच्चों को प्रेरित करती रही, यह साबित करते हुए कि सबसे सरल खेल भी थोड़ी कल्पना से दुनिया बदल सकते हैं।</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('.nav-content');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.menu-toggle').classList.remove('active');
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
