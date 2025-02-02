@@ -4,77 +4,507 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #0056b3;
+            --background-color: #f4f4f4;
+            --text-color: #333;
         }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            z-index: 2;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-color);
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 2;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background-color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        /* Game Styles */
         .container {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 50px;
+            margin-top: 2rem;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 2rem auto;
         }
+
         .game-area {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            width: 100%;
+            margin: 2rem 0;
         }
+
         .image {
-            width: 100px;
-            height: 100px;
+            width: 200px;
+            height: auto;
+            max-width: 30vw;
             margin: 10px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
+
+        .image:hover {
+            transform: scale(1.05);
+        }
+
         .board {
             display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-gap: 5px;
-            background-color: #333;
-            padding: 10px;
-            border-radius: 10px;
+            grid-template-columns: repeat(3, minmax(90px, 110px));
+            gap: 10px;
+            background: linear-gradient(135deg, #6e8efb, #4a6cf7);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+            position: relative;
+            transition: transform 0.3s ease;
         }
+
+        .board:hover {
+            transform: translateY(-5px);
+        }
+
         .cell {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: white;
-            font-size: 2em;
+            background-color: rgba(255, 255, 255, 0.95);
+            font-size: 2.5em;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            color: #4a6cf7;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
+
         .cell:hover {
-            background-color: #ddd;
+            background-color: #ffffff;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+
+        .cell:active {
+            transform: scale(0.95);
+        }
+
+        .cell.x, .cell.o {
+            cursor: not-allowed;
+        }
+
+        .cell.x {
+            color: #ff6b6b;
+        }
+
+        .cell.o {
+            color: #20c997;
+        }
+
+        .winning-cell {
+            animation: winner 0.5s ease-in-out;
+            background-color: rgba(255, 255, 255, 1);
+            border: 2px solid #20c997;
+        }
+
+        @keyframes winner {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
         .message {
+            font-size: 1.8em;
+            margin: 25px 0;
+            color: #4a6cf7;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .message.winner {
+            color: #20c997;
+            transform: scale(1.1);
+        }
+
+        .message.draw {
+            color: #ff9f43;
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            margin: 2rem auto;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .leaderboard h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .leaderboard-table th {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .leaderboard-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .player-input {
+            margin: 1rem 0;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .player-input input {
+            padding: 0.5rem 1rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .player-input input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .player-label {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            margin: 1rem 0;
+            font-size: 1.1em;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
             font-size: 1.5em;
-            margin: 20px 0;
+            font-weight: bold;
+            color: var(--primary-color);
         }
-        .btn {
-            padding: 10px 20px;
-            font-size: 1em;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+
+        .stat-label {
+            color: var(--text-color);
+            font-size: 0.9em;
         }
-        .btn:hover {
-            background-color: #0056b3;
-        }
+
+        /* Footer Styles */
         .footer {
-            margin-top: 20px;
-            font-size: 1em;
-            color: #555;
+            background-color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .social-links a {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+            background-color: rgba(0, 123, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .footer-text {
+            text-align: center;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 5rem 2rem 2rem;
+                gap: 1rem;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            .menu-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(8px, 6px);
+            }
+
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -5px);
+            }
+
+            .game-area {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .image {
+                max-width: 50vw;
+                width: 150px;
+            }
+
+            .board {
+                grid-template-columns: repeat(3, 70px);
+                gap: 6px;
+            }
+
+            .cell {
+                width: 70px;
+                height: 70px;
+            }
+
+            .social-links {
+                gap: 1rem;
+            }
+
+            .social-links a {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.8rem;
+            }
+
+            .nav-brand {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                padding: 4rem 1rem 1rem;
+            }
+
+            .image {
+                max-width: 70vw;
+                width: 120px;
+            }
+
+            .board {
+                grid-template-columns: repeat(3, 60px);
+                gap: 5px;
+            }
+
+            .cell {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5em;
+            }
+
+            .btn {
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+
+            .footer {
+                padding: 1.5rem 0;
+            }
+
+            .footer-content {
+                gap: 1rem;
+            }
+
+            .social-links a {
+                font-size: 1.1rem;
+            }
+
+            .footer-text {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-brand">Tic Tac Toe</a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="leaderboard.html">Leaderboard</a>
+                <a href="howtoplay.html">How to Play</a>
+                <a href="about.html">About</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <h1>Tic Tac Toe</h1>
+        <div class="player-input">
+            <div>
+                <span class="player-label">Player X:</span>
+                <input type="text" id="playerX" placeholder="Enter name" required>
+            </div>
+            <div>
+                <span class="player-label">Player O:</span>
+                <input type="text" id="playerO" placeholder="Enter name" required>
+            </div>
+        </div>
         <div class="game-area">
             <img src="aarav.jpg" alt="Left Image" class="image">
             <div class="board" id="board"></div>
@@ -82,14 +512,105 @@
         </div>
         <p class="message" id="message"></p>
         <button class="btn" onclick="resetGame()">Replay</button>
+
+        <div class="leaderboard">
+            <h2>Leaderboard</h2>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalGames">0</div>
+                    <div class="stat-label">Total Games</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="draws">0</div>
+                    <div class="stat-label">Draws</div>
+                </div>
+            </div>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Wins</th>
+                        <th>Win Rate</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                </tbody>
+            </table>
+        </div>
     </div>
     
-    <div class="footer">Made with love by Aarav and Aahan.</div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="footer-text">Made with ❤️ by Aarav and Aahan</p>
+        </div>
+    </footer>
 
     <script>
         let board = ['', '', '', '', '', '', '', '', ''];
         let currentPlayer = 'X';
         let gameActive = true;
+        let winningCombination = null;
+        let gameStats = loadGameStats();
+
+        function loadGameStats() {
+            const stats = localStorage.getItem('tictactoeStats');
+            if (stats) {
+                return JSON.parse(stats);
+            }
+            return {
+                players: {},
+                totalGames: 0,
+                draws: 0
+            };
+        }
+
+        function saveGameStats() {
+            localStorage.setItem('tictactoeStats', JSON.stringify(gameStats));
+            updateLeaderboard();
+        }
+
+        function updateLeaderboard() {
+            const tbody = document.getElementById('leaderboardBody');
+            const players = Object.entries(gameStats.players)
+                .map(([name, stats]) => ({
+                    name,
+                    wins: stats.wins,
+                    winRate: ((stats.wins / gameStats.totalGames) * 100).toFixed(1)
+                }))
+                .sort((a, b) => b.wins - a.wins);
+
+            tbody.innerHTML = players.map(player => `
+                <tr>
+                    <td>${player.name}</td>
+                    <td>${player.wins}</td>
+                    <td>${player.winRate}%</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('totalGames').textContent = gameStats.totalGames;
+            document.getElementById('draws').textContent = gameStats.draws;
+        }
+
+        function getCurrentPlayerName() {
+            return currentPlayer === 'X' ? 
+                document.getElementById('playerX').value || 'Player X' : 
+                document.getElementById('playerO').value || 'Player O';
+        }
+
+        function updatePlayerStats(playerName, isWinner) {
+            if (!gameStats.players[playerName]) {
+                gameStats.players[playerName] = { wins: 0 };
+            }
+            if (isWinner) {
+                gameStats.players[playerName].wins++;
+            }
+        }
 
         function renderBoard() {
             const boardElement = document.getElementById('board');
@@ -97,6 +618,12 @@
             board.forEach((cell, index) => {
                 const cellElement = document.createElement('div');
                 cellElement.classList.add('cell');
+                if (cell) {
+                    cellElement.classList.add(cell.toLowerCase());
+                }
+                if (winningCombination && winningCombination.includes(index)) {
+                    cellElement.classList.add('winning-cell');
+                }
                 cellElement.textContent = cell;
                 cellElement.addEventListener('click', () => handleCellClick(index));
                 boardElement.appendChild(cellElement);
@@ -105,43 +632,91 @@
 
         function handleCellClick(index) {
             if (board[index] || !gameActive) return;
+            
+            const playerName = getCurrentPlayerName();
             board[index] = currentPlayer;
-            checkWinner();
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            const messageElement = document.getElementById('message');
+            
+            if (checkWinner()) {
+                messageElement.textContent = `${playerName} Wins!`;
+                messageElement.classList.add('winner');
+                gameActive = false;
+                gameStats.totalGames++;
+                updatePlayerStats(playerName, true);
+                saveGameStats();
+            } else if (!board.includes('')) {
+                messageElement.textContent = "It's a Draw!";
+                messageElement.classList.add('draw');
+                gameActive = false;
+                gameStats.totalGames++;
+                gameStats.draws++;
+                saveGameStats();
+            } else {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                messageElement.textContent = `${getCurrentPlayerName()}'s Turn`;
+            }
+            
             renderBoard();
         }
 
         function checkWinner() {
             const winPatterns = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8], 
-                [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
                 [0, 4, 8], [2, 4, 6]
             ];
 
             for (const pattern of winPatterns) {
                 const [a, b, c] = pattern;
                 if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-                    document.getElementById('message').textContent = `Player ${board[a]} Wins!`;
-                    gameActive = false;
-                    return;
+                    winningCombination = pattern;
+                    return true;
                 }
             }
-
-            if (!board.includes('')) {
-                document.getElementById('message').textContent = "It's a Draw!";
-                gameActive = false;
-            }
+            return false;
         }
 
         function resetGame() {
             board = ['', '', '', '', '', '', '', '', ''];
             currentPlayer = 'X';
             gameActive = true;
-            document.getElementById('message').textContent = '';
+            winningCombination = null;
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = `${getCurrentPlayerName()}'s Turn`;
+            messageElement.classList.remove('winner', 'draw');
             renderBoard();
         }
 
+        // Initialize game
         renderBoard();
+        updateLeaderboard();
+        document.getElementById('message').textContent = `${getCurrentPlayerName()}'s Turn`;
+
+        // Mobile Navigation
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('.nav-content');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.menu-toggle').classList.remove('active');
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
     </script>
 </body>
 </html>
